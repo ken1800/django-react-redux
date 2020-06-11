@@ -28,6 +28,8 @@ npm start #after cd Django-React/front
 
 ```
 
+![django-react](https://user-images.githubusercontent.com/50213124/84330240-8d72b780-ab8f-11ea-91f2-06fd9032077c.png)
+
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
