@@ -1,8 +1,13 @@
-import React, { Component, Fragment } from "react";
+import React, { PureComponent, Fragment } from "react";
 import AddFormLead from "./AddLeadForm";
 import Leads from "./LeadsList";
-class Dashboard extends Component {
+import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
+class Dashboard extends PureComponent {
   render() {
+    if (!this.props.isAuthenticated) {
+      return <Redirect to="/login" />;
+    }
     return (
       <Fragment>
         <div>
@@ -14,4 +19,8 @@ class Dashboard extends Component {
     );
   }
 }
-export default Dashboard;
+
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+});
+export default connect(mapStateToProps, {})(Dashboard);

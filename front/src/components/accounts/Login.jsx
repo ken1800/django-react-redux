@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, PureComponent } from "react";
 import {
   Container,
   Card,
@@ -14,27 +14,29 @@ import {
 import PropTypes from "prop-types";
 import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-import { login } from "../../store/actions/authActions";
+import { loginStarting } from "../../store/actions/authActions";
 
-class Login extends Component {
+class Login extends PureComponent {
   state = {
     username: "",
     password: "",
   };
   static propTypes = {
-    register: PropTypes.func.isRequired,
     isAuthenticated: PropTypes.bool,
   };
   onSubmit = (e) => {
-    e.preventDefault();
-    this.props.login(this.state.username, this.state.password);
+    // e.preventDefault();
+    const username = this.state.username;
+    const password = this.state.password;
+    const user = { username, password };
+    this.props.loginStarting(user);
   };
 
   onChange = (e) => this.setState({ [e.target.name]: e.target.value });
 
   render() {
     const { username, password } = this.state;
-
+    console.log("loginComponent Rendering ..................");
     if (this.props.isAuthenticated) {
       return <Redirect to="/" />;
     }
@@ -85,4 +87,4 @@ class Login extends Component {
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
 });
-export default connect(mapStateToProps, { login })(Login);
+export default connect(mapStateToProps, { loginStarting })(Login);

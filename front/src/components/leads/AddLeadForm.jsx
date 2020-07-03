@@ -13,24 +13,37 @@ import {
 } from "reactstrap";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { addLead } from "../../store/actions/leadsActions";
+import { addLeadStart } from "../../store/actions/leadsActions";
+import { createStructuredSelector } from "reselect";
+import { getToken } from "../../store/actions/tokenSelector";
 
 class AddFormLead extends Component {
   state = {
     name: "",
     email: "",
     message: "",
+    token: null,
   };
   static propTypes = {
-    addLead: PropTypes.func.isRequired,
+    addLeadStart: PropTypes.func.isRequired,
+    getToken: PropTypes.string.isRequired,
   };
+
+  componentDidMount() {
+    const { getToken } = this.props;
+    this.setState({
+      token: getToken,
+    });
+  }
   onChange = (e) => this.setState({ [e.target.name]: e.target.value });
 
   onSubmit = (e) => {
+    const { addLeadStart } = this.props;
+    // const token = getToken();
     e.preventDefault();
-    const { name, email, message } = this.state;
-    const lead = { name, email, message };
-    this.props.addLead(lead);
+    const { name, email, message, token } = this.state;
+    const lead = { name, email, message, token };
+    addLeadStart(lead);
     this.setState({
       name: "",
       email: "",
@@ -88,4 +101,7 @@ class AddFormLead extends Component {
     );
   }
 }
-export default connect(null, { addLead })(AddFormLead);
+const mapStateToProps = createStructuredSelector({
+  getToken,
+});
+export default connect(mapStateToProps, { addLeadStart })(AddFormLead);

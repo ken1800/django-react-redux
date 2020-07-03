@@ -14,24 +14,27 @@ const error = (state = initialState, action) => {
         ...state,
         isLoading: true,
       };
-    case actionType.USER_LOADED:
+    case actionType.LOAD_USER_SUCCEED:
+      // console.log(action.payload);
       return {
         ...state,
         isAuthenticated: true,
         isLoading: false,
-        user: action.payload,
+        user: action.payload.data,
       };
 
-    case actionType.LOGIN_SUCCESS:
+    case actionType.LOGIN_SUCCEED:
     case actionType.REGISTER_SUCCESS:
+      console.log(action.payload.token);
       localStorage.setItem("token", action.payload.token);
+
       return {
         ...state,
         ...action.payload,
         isAuthenticated: true,
         isLoading: false,
       };
-    case actionType.AUTH_ERROR:
+    case actionType.LOAD_USER_FAIL:
     case actionType.LOGIN_FAIL:
     case actionType.LOGOUT_SUCCESS:
     case actionType.REGISTER_FAIL:

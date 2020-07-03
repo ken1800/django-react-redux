@@ -1,6 +1,11 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import { getLeads, deleteLead } from "../../store/actions/leadsActions";
+import {
+  getLeads,
+  getLeadStart,
+  deleteLeadStart,
+} from "../../store/actions/leadsActions";
+import { getToken } from "../../store/actions/tokenSelector";
 import PropTypes from "prop-types";
 import {
   Container,
@@ -15,10 +20,24 @@ class Leads extends Component {
   static propTypes = {
     leads: PropTypes.array.isRequired,
     getLeads: PropTypes.func.isRequired,
-    deleteLead: PropTypes.func.isRequired,
+    deleteLeadStart: PropTypes.func.isRequired,
+  };
+  state = {
+    id: null,
+    Token: null,
   };
   componentDidMount() {
-    this.props.getLeads();
+    const { getLeadStart, Token } = this.props;
+    // I USED THIS METHOD OF GETTING MY TOKEN USING THE SELECTOR BEFORE I KNEW ABOUT THE select() API IN REDUX SAGA
+    getLeadStart();
+    this.setState({
+      Token: Token,
+    });
+  }
+  sendData(id) {
+    const tok = this.state.Token;
+    const data = { id, tok };
+    this.props.deleteLeadStart(data);
   }
   render() {
     return (
@@ -48,15 +67,15 @@ class Leads extends Component {
                           Delete
                         </th>
                       </tr>
-                      {this.props.leads.map((lead) => (
-                        <tr className="table-success" key={lead.id}>
+                      {this.props.leads.map(({ id, name, email, message }) => (
+                        <tr className="table-success" key={id}>
                           <td>
                             <a
                               role="button"
                               aria-expanded="false"
                               aria-controls="collapseExample"
                             >
-                              {lead.id}
+                              {id}
                             </a>
                           </td>
                           <td>
@@ -65,17 +84,7 @@ class Leads extends Component {
                               aria-expanded="false"
                               aria-controls="collapseExample"
                             >
-                              {lead.name}
-                            </a>
-                          </td>
-
-                          <td>
-                            <a
-                              role="button"
-                              aria-expanded="false"
-                              aria-controls="collapseExample"
-                            >
-                              {lead.email}
+                              {name}
                             </a>
                           </td>
 
@@ -85,16 +94,29 @@ class Leads extends Component {
                               aria-expanded="false"
                               aria-controls="collapseExample"
                             >
-                              {lead.message}
+                              {email}
+                            </a>
+                          </td>
+
+                          <td>
+                            <a
+                              role="button"
+                              aria-expanded="false"
+                              aria-controls="collapseExample"
+                            >
+                              {message}
                             </a>
                           </td>
 
                           <td>
                             <Button
                               color="danger"
-                              onClick={this.props.deleteLead.bind(
+                              type="button"
+                              // onClick={(id) => this.props.deleteLeadStart(id)}
+                              onClick={this.sendData.bind(
                                 this,
-                                lead.id
+                                id,
+                                this.state.Token
                               )}
                             >
                               Delete
@@ -115,6 +137,9 @@ class Leads extends Component {
 }
 const mapStateToProps = (state) => ({
   leads: state.leads.leads,
+  Token: getToken(state),
 });
 
-export default connect(mapStateToProps, { getLeads, deleteLead })(Leads);
+export default connect(mapStateToProps, { getLeadStart, deleteLeadStart })(
+  Leads
+);
