@@ -21,10 +21,14 @@ make sure the following are installed
 
 
 
-cd Django-React # migrating to the root directory 'iCrawler'
+cd Django-React # migrating to the root directory 'Django-React'
 python manage.py runserver # starts the django server 'localhost:8000'
+cd Django-React/front
+npm start #after cd Django-React/front
 
 ```
+
+![django-react](https://user-images.githubusercontent.com/50213124/84330240-8d72b780-ab8f-11ea-91f2-06fd9032077c.png)
 
 
 ## Contributing
